@@ -7,7 +7,7 @@ This is the top-level docstring (of the whole package).
 
 from setuptools import find_packages
 
-__all__ = ['adam','adam_6224_ds', 'version']
+__all__ = ['adam', 'adam_6224_ds', 'adam_6217_ds', 'version']
 __doc__ = ""
 __author__ = "Patryk Fraczek"
 __author_email__ = "pat.fraczekC@gmail.com"

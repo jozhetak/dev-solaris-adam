@@ -17,5 +17,7 @@ setup(
     install_requires=["setuptools"],
     entry_points={
         "console_scripts": ["ADAM = "
+                            "adam.adam_6224_ds.adam_6224.Adam6224:main",
+                            "ADAM = "
                             "adam.adam_6224_ds.adam_6224.Adam6224:main"]}
 )

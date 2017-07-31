@@ -137,12 +137,14 @@ class Adam6224(Device):
 
     def always_executed_hook(self):
         # PROTECTED REGION ID(Adam6224.always_executed_hook) ENABLED START #
-        pass
+        if not self.connected_adam.connect():
+            self.set_state(DevState.ALARM)
+            self.set_status("Connection  error")
         # PROTECTED REGION END #    //  Adam6224.always_executed_hook
 
     def delete_device(self):
         # PROTECTED REGION ID(Adam6224.delete_device) ENABLED START #
-        pass
+        self.connected_adam.close()
         # PROTECTED REGION END #    //  Adam6224.delete_device
 
     # ------------------

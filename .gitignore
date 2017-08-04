@@ -102,5 +102,4 @@ ENV/
 
 # PyCharm project files
 .idea/
-modbus_test.py
-MyTango.py
+

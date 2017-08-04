@@ -14,13 +14,7 @@ For more information and documentation of the device visit http://www.advantech.
 
 from setuptools import find_packages
 
-__all__ = ['adam', 'adam_6224', 'adam_6217', 'adam_6250', 'run_server', 'version']
+__all__ = ['adam', 'adam_6217', 'adam_6250', 'run_server', 'version']
 __doc__ = ""
 __author__ = "Patryk Fraczek"
 __author_email__ = "pat.fraczekC@gmail.com"
-
-for package_name in find_packages():
-    package_import = __import__(package_name)
-    __doc__ += "%s: %s" % (package_name, package_import.__doc__)
-    __author__ += package_import.__author__ + ", "
-    __author_email__ += package_import.__author_email__ + ", "

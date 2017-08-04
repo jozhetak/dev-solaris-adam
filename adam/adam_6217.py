@@ -69,21 +69,21 @@ For each AI there are associated attributes:
     reset_max = [False, False, False, False, False, False, False, False]
     high_alarm_flag = [False, False, False, False, False, False, False, False]
     low_alarm_flag = [False, False, False, False, False, False, False, False]
-    
-    type_code_dictionary = {'0-20mA': int("0182", 16), '4-20mA': int("0180", 16),
+
+    type_to_code_dict = {'0-20mA': int("0182", 16), '4-20mA': int("0180", 16),
                            '0-10V': int("0148", 16), '0-5V': int("0147", 16),
                            '+-10V': int("0143", 16), '+-5V': int("0142", 16),
                            '+-1V': int("0140", 16), '+-500mV': int("0104", 16),
                            '+-150m': int("0103", 16), '+-20mA': int("0181", 16)}
-    type_code_dictionary.update({v: k for k, v in type_code_dictionary.iteritems()})
+    code_to_type_dict = {v: k for k, v in type_to_code_dict.iteritems()}
 
-    status_dict_1 = {'Failed to provide AI value (UART timeout)': int(1),
-                     'Over Range': int(2),
-                     'Under Range': int(4),
-                     ' ': int(0),
-                     'Open Circuit(Burnout)': int(8),
-                     'AD Converter failed': int(128),
-                     'Zero / Span Calibration Error': int(512)}
+    status_dict_1 = {int(1): 'Failed to provide AI value (UART timeout)',
+                     int(2): 'Over Range',
+                     int(4):'Under Range',
+                     int(8): 'Open Circuit(Burnout)',
+                     int(128): 'AD Converter failed',
+                     int(512): 'Zero / Span Calibration Error',
+                     int(0): ' '}
     status_dict_1.update({v: k for k, v in status_dict_1.iteritems()})
 
     # ----------------
@@ -347,62 +347,55 @@ For each AI there are associated attributes:
         max_dim_x=8
     )
 
-
-
     # ---------------
     # General methods
     # ---------------
 
     def init_device(self):
         Device.init_device(self)
-        self.set_state(DevState.ON)
+        self.set_state(DevState.STANDBY)
         self.set_status("ADAM-6217 enabled")
 
     def delete_device(self):
         self.connected_ADAM.close()
 
-
     # ------------------
     # Attributes methods
     # ------------------
-      
+
     # --------------------
     # AnalogInput methods
     # --------------------
 
     def read_AnalogInput_0(self):
-        tmp = self.connected_ADAM.read_holding_registers(0, 8)
-        self.analog_Input_values = tmp.registers
-        return self.encode_value(self.analog_Input_values[0], 0)
+        return self.encode_value(self.analog_input_values[0], 0)
 
     def read_AnalogInput_1(self):
-        return self.encode_value(self.analog_Input_values[1], 1)
+        return self.encode_value(self.analog_input_values[1], 1)
 
     def read_AnalogInput_2(self):
-        return self.encode_value(self.analog_Input_values[2], 2)
+        return self.encode_value(self.analog_input_values[2], 2)
 
     def read_AnalogInput_3(self):
-        return self.encode_value(self.analog_Input_values[3], 3)
+        return self.encode_value(self.analog_input_values[3], 3)
     
     def read_AnalogInput_4(self):
-        return self.encode_value(self.analog_Input_values[4], 4)
+        return self.encode_value(self.analog_input_values[4], 4)
 
     def read_AnalogInput_5(self):
-        return self.encode_value(self.analog_Input_values[5], 5)
+        return self.encode_value(self.analog_input_values[5], 5)
 
     def read_AnalogInput_6(self):
-        return self.encode_value(self.analog_Input_values[6], 6)
+        return self.encode_value(self.analog_input_values[6], 6)
     
     def read_AnalogInput_7(self):
-        return self.encode_value(self.analog_Input_values[7], 7)
+        return self.encode_value(self.analog_input_values[7], 7)
 
     # --------------------
     # TypeCode methods
     # --------------------
 
     def read_TypeCode_0(self):
-        tmp = self.connected_ADAM.read_holding_registers(200, 8)
-        self.analog_output_types = tmp.registers
         return self.decode_type_code(0)
 
     def read_TypeCode_1(self):
@@ -425,60 +418,49 @@ For each AI there are associated attributes:
     
     def read_TypeCode_7(self):
         return self.decode_type_code(7)
-    
-    
 
     def write_TypeCode_0(self, value):
-        self.connected_ADAM.write_register(200,self.code_type_code(value))
+        self.connected_ADAM.write_register(200, self.encode_type_code(value))
 
     def write_TypeCode_1(self, value):
-        self.connected_ADAM.write_register(201, self.code_type_code(value))
+        self.connected_ADAM.write_register(201, self.encode_type_code(value))
 
     def write_TypeCode_2(self, value):
-        self.connected_ADAM.write_register(202, self.code_type_code(value))
+        self.connected_ADAM.write_register(202, self.encode_type_code(value))
 
     def write_TypeCode_3(self, value):
-        self.connected_ADAM.write_register(203, self.code_type_code(value))
+        self.connected_ADAM.write_register(203, self.encode_type_code(value))
 
     def write_TypeCode_4(self, value):
-        self.connected_ADAM.write_register(204,self.code_type_code(value))
+        self.connected_ADAM.write_register(204, self.encode_type_code(value))
 
     def write_TypeCode_5(self, value):
-        self.connected_ADAM.write_register(205, self.code_type_code(value))
+        self.connected_ADAM.write_register(205, self.encode_type_code(value))
 
     def write_TypeCode_6(self, value):
-        self.connected_ADAM.write_register(206, self.code_type_code(value))
+        self.connected_ADAM.write_register(206, self.encode_type_code(value))
 
     def write_TypeCode_7(self, value):
-        self.connected_ADAM.write_register(207, self.code_type_code(value))
+        self.connected_ADAM.write_register(207, self.encode_type_code(value))
 
     # --------------------
     # Flags methods
     # -------------------- 
 
     def read_OpenCircuitFlags(self):
-        tmp = self.connected_ADAM.read_coils(120, 8)
-        self.open_circuit_flags = tmp.bits
         return self.open_circuit_flags
     
     def read_HighAlarmFlags(self):
-        tmp = self.connected_ADAM.read_coils(120, 8)
-        self.open_circuit_flags=tmp.bits
         return self.open_circuit_flags
     
     def read_LowAlarmFlags(self):
-        tmp = self.connected_ADAM.read_coils(120, 8)
-        self.open_circuit_flags=tmp.bits
         return self.open_circuit_flags
-    
-    
+
     # --------------------
     # Historical Values methods
     # --------------------
 
     def read_HistMax_0(self):
-        tmp = self.connected_ADAM.read_holding_registers(10,8)
-        self.hist_max = tmp.registers
         return self.encode_value(self.hist_max[0], 0)
 
     def read_HistMax_1(self):
@@ -503,8 +485,6 @@ For each AI there are associated attributes:
         return self.encode_value(self.hist_max[7], 7)
     
     def read_HistMin_0(self):
-        tmp = self.connected_ADAM.read_holding_registers(20, 8)
-        self.hist_min = tmp.registers
         return self.encode_value(self.hist_min[0], 0)
 
     def read_HistMin_1(self):
@@ -533,8 +513,6 @@ For each AI there are associated attributes:
     # --------------------
 
     def read_Status_0(self):
-        tmp = self.connected_ADAM.read_holding_registers(100, 16)
-        self.analog_input_statuses = tmp.registers
         return self.status_dict_1[self.analog_input_statuses[0]]
 
     def read_Status_1(self):
@@ -542,7 +520,6 @@ For each AI there are associated attributes:
 
     def read_Status_2(self):
         return self.status_dict_1[self.analog_input_statuses[4]]
-
 
     def read_Status_3(self):
         return self.status_dict_1[self.analog_input_statuses[6]]
@@ -579,10 +556,10 @@ For each AI there are associated attributes:
         return tmp
 
     def decode_type_code(self, channel):
-        return self.type_code_dictionary[self.analog_output_types[channel]]
+        return self.code_to_type_dict[self.analog_output_types[channel]]
 
-    def code_type_code(self, value="0-20mA"):
-        return self.type_code_dictionary[value]
+    def encode_type_code(self, value="0-20mA"):
+        return self.type_to_code_dict[value]
 
     # --------
     # Commands
@@ -608,7 +585,7 @@ For each AI there are associated attributes:
         self.info_stream("Connected do device with IP: " + str(
              self.DeviceAddress))
 
-    @command(dtype_in = int , doc_in='Channel number')
+    @command(dtype_in = int, doc_in='Channel number')
     @DebugIt()
     def ResetHistMax(self, value):
         self.connected_ADAM.write_coil(100 + value, int('0xff00', 16))
@@ -618,17 +595,41 @@ For each AI there are associated attributes:
     def ResetHistMin(self, value):
         self.connected_ADAM.write_coil(110 + value, int('0xff00', 16))
 
-
+    @command(polling_period=500)
+    def read_DataFromDevice(self):
+        if self.get_state() == tango.DevState.ON:
+            # read Open-Circuit Flag
+            tmp = self.connected_ADAM.read_coils(120, 8)
+            self.open_circuit_flags = tmp.bits
+            # read LowAlarmFlags
+            tmp = self.connected_ADAM.read_coils(130, 8)
+            self.low_alarm_flag = tmp.bits
+            # read High Alarm Flags
+            tmp = self.connected_ADAM.read_coils(140, 8)
+            self.high_alarm_flag = tmp.bits
+            # read Analog Inputs
+            tmp = self.connected_ADAM.read_holding_registers(0, 8)
+            self.analog_input_values = tmp.registers
+            # read Historical Max Values
+            tmp = self.connected_ADAM.read_holding_registers(10, 8)
+            self.hist_max = tmp.registers
+            # read Historical Min Value
+            tmp = self.connected_ADAM.read_holding_registers(20, 8)
+            self.hist_min = tmp.registers
+            # read Statuses
+            tmp = self.connected_ADAM.read_holding_registers(100, 16)
+            self.analog_input_statuses = tmp.registers
+            # read Type Codes
+            tmp = self.connected_ADAM.read_holding_registers(200, 8)
+            self.analog_output_types = tmp.registers
 
 # ----------
 # Run server
 # ----------
 
-
 def main(args=None, **kwargs):
     from tango.server import run
     return run((ADAM6217,), args=args, **kwargs)
-
 
 if __name__ == '__main__':
     main()

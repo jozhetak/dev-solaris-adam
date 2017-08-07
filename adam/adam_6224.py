@@ -33,17 +33,18 @@ Device contains 4-ch Isolated Analog Output and 4-ch Digital Input.
 For each AO there are associated attributes:
 
  * AnalogOutput(double) - contains present output value of the channel (V or
- mA), it is adjustable
+    mA), it is adjustable
  * SafetyValue(double)  - contains present safety value of the channel (V or
- mA), it is adjustable
+    mA), it is adjustable
  * StartupValue(double)  - contains present startup value of the channel (V
- or mA), it is adjustable
+    or mA), it is adjustable
  * Status(string)  - contains present status of the channel, available:
- Fail to provide AO Value, No Output Current, Zero/Span Calibration Error,
-  DI triggered to Safety Value, DI triggered to Startup Value,
-  AO triggered to Fail Safety Value
+    Fail to provide AO Value, No Output Current, Zero/Span Calibration Error,
+    DI triggered to Safety Value, DI triggered to Startup Value,
+    AO triggered to Fail Safety Value
  * CodeType(string) - contains present type of output of the channel,
- available:  0-20mA, 4-20mA, 0-10V, 0-5V, +-10V, +-5V
+    available:  0-20mA, 4-20mA, 0-10V, 0-5V, +-10V, +-5V
+
 
 For each DI there are associated attributes:
 

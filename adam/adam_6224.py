@@ -45,6 +45,7 @@ For each AO there are associated attributes:
  * CodeType(string) - contains present type of output of the channel,
     available:  0-20mA, 4-20mA, 0-10V, 0-5V, +-10V, +-5V
 
+
 For each DI there are associated attributes:
 
  * DigitalInput(bool) - contains present input value of the channel

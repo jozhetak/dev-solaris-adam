@@ -108,243 +108,302 @@ For each AI there are associated attributes:
     AnalogInput_0 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc = "Value at channel 0"
     )
 
     AnalogInput_1 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Value at channel 1"
     )
 
     AnalogInput_2 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc = "Value at channel 2"
     )
 
     AnalogInput_3 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Value at channel 3"
     )
 
     AnalogInput_4 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Value at channel 4"
     )
 
     AnalogInput_5 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Value at channel 5"
     )
 
     AnalogInput_6 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Value at channel 6"
     )
 
     AnalogInput_7 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Value at channel 7"
     )
 
     TypeCode_0 = attribute(
         dtype='str',
         access=AttrWriteType.READ_WRITE,
+        doc="Type of input at channel 0"
     )
 
     TypeCode_1 = attribute(
         dtype='str',
         access=AttrWriteType.READ_WRITE,
+        doc="Type of input at channel 1"
     )
 
     TypeCode_2 = attribute(
         dtype='str',
         access=AttrWriteType.READ_WRITE,
+        doc="Type of input at channel 2"
     )
 
     TypeCode_3 = attribute(
         dtype='str',
         access=AttrWriteType.READ_WRITE,
+        doc="Type of input at channel 3"
     )
 
     TypeCode_4 = attribute(
         dtype='str',
         access=AttrWriteType.READ_WRITE,
+        doc="Type of input at channel 4"
     )
 
     TypeCode_5 = attribute(
         dtype='str',
         access=AttrWriteType.READ_WRITE,
+        doc="Type of input at channel 5"
     )
 
     TypeCode_6 = attribute(
         dtype='str',
         access=AttrWriteType.READ_WRITE,
+        doc="Type of input at channel 6"
     )
 
     TypeCode_7 = attribute(
         dtype='str',
         access=AttrWriteType.READ_WRITE,
+        doc="Type of input at channel 7"
     )
 
     Status_0 = attribute(
         dtype='str',
         access=AttrWriteType.READ,
+        doc="Status of channel 0"
     )
 
     Status_1 = attribute(
         dtype='str',
         access=AttrWriteType.READ,
+        doc="Status of channel 1"
     )
 
     Status_2 = attribute(
         dtype='str',
         access=AttrWriteType.READ,
+        doc="Status of channel 2"
     )
 
     Status_3 = attribute(
         dtype='str',
         access=AttrWriteType.READ,
+        doc="Status of channel 3"
     )
 
     Status_4 = attribute(
         dtype='str',
         access=AttrWriteType.READ,
+        doc="Status of channel 4"
     )
 
     Status_5 = attribute(
         dtype='str',
         access=AttrWriteType.READ,
+        doc="Status of channel 5"
     )
 
     Status_6 = attribute(
         dtype='str',
         access=AttrWriteType.READ,
+        doc="Status of channel 6"
     )
 
     Status_7 = attribute(
         dtype='str',
         access=AttrWriteType.READ,
+        doc="Status of channel 7"
     )
 
     HistMax_0 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Historical Minimum Value - the highest value at channel 0 since "
+            "last reset"
     )
 
     HistMax_1 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Historical Minimum Value - the highest value at channel 1 since "
+            "last reset"
     )
 
     HistMax_2 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Historical Minimum Value - the highest value at channel 2 since "
+            "last reset"
     )
 
     HistMax_3 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Historical Minimum Value - the highest value at channel 3 since "
+            "last reset"
     )
 
     HistMax_4 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Historical Minimum Value - the highest value at channel 4 since "
+            "last reset"
     )
 
     HistMax_5 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Historical Minimum Value - the highest value at channel 5 since "
+            "last reset"
     )
 
     HistMax_6 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Historical Minimum Value - the highest value at channel 6 since "
+            "last reset"
     )
 
     HistMax_7 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Historical Minimum Value - the highest value at channel 7 since "
+            "last reset"
     )
     
     HistMin_0 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc = "Historical Minimum Value - the lowest value at channel 0 since "
+          "last reset"
     )
 
     HistMin_1 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc = "Historical Minimum Value - the lowest value at channel 1 since "
+          "last reset"
     )
 
     HistMin_2 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Historical Minimum Value - the lowest value at channel 2 since "
+            "last reset"
     )
 
     HistMin_3 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc = "Historical Minimum Value - the lowest value at channel 3 since "
+          "last reset"
     )
 
     HistMin_4 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Historical Minimum Value - the lowest value at channel 4 since "
+            "last reset"
     )
 
     HistMin_5 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc = "Historical Minimum Value - the lowest value at channel 5 since "
+          "last reset"
     )
 
     HistMin_6 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Historical Minimum Value - the lowest value at channel 6 since "
+            "last reset"
     )
 
     HistMin_7 = attribute(
         dtype='double',
         access=AttrWriteType.READ,
-        format='%2.4f'
+        format='%2.4f',
+        doc="Historical Minimum Value - the lowest value at channel 7 since "
+            "last reset"
     )
 
     OpenCircuitFlags = attribute(
         dtype=(bool,),
         access=AttrWriteType.READ,
-        max_dim_x=8
+        max_dim_x=8,
+        doc="Bool values of Open Circuit Flag for channels"
     )
 
     HighAlarmFlags = attribute(
         dtype=(bool,),
         access=AttrWriteType.READ,
-        max_dim_x=8
+        max_dim_x=8,
+        doc="Bool values of High Alarm Flag for channels"
     )
 
     LowAlarmFlags = attribute(
         dtype=(bool,),
         access=AttrWriteType.READ,
-        max_dim_x=8
+        max_dim_x=8,
+        doc="Bool values of Low Alarm Flag for channels"
     )
 
     # ---------------
@@ -582,10 +641,10 @@ For each AI there are associated attributes:
         self.set_state(DevState.ON)
         self.set_status("Connected do device with IP: "
                         + str(self.DeviceAddress))
-        self.info_stream("Connected do device with IP: " + str(
+        self.info_stream("Connected to device with IP: " + str(
              self.DeviceAddress))
 
-    @command(dtype_in = int, doc_in='Channel number')
+    @command(dtype_in=int, doc_in='Channel number')
     @DebugIt()
     def ResetHistMax(self, value):
         self.connected_ADAM.write_coil(100 + value, int('0xff00', 16))

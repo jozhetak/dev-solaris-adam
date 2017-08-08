@@ -257,6 +257,13 @@ For each DO there are associated attributes:
             "device")
 
     def delete_device(self):
+        """Disconnect from physical device before deleting instance"""
+        self.connected_ADAM.close()
+
+
+    @command
+    @DebugIt()
+    def disconnect(self):
         """Disconnect from device and sets state to STANDBY """
         self.connected_ADAM.close()
         self.set_state(DevState.STANDBY)

@@ -417,11 +417,18 @@ For each AI there are associated attributes:
         self.set_status("ADAM-6217 enabled")
 
     def delete_device(self):
+        """Disconnect from physical device before deleting instance"""
+        self.connected_ADAM.close()
+
+
+    @command
+    @DebugIt()
+    def disconnect(self):
         """Disconnect from device and sets state to STANDBY """
         self.connected_ADAM.close()
         self.set_state(DevState.STANDBY)
         self.set_status(
-            "Device disconnected form ADAM-6250, set state to STANDBY, "
+            "Device disconnected form ADAM-6217, set state to STANDBY, "
             "ready to connect to device again")
 
     # ------------------

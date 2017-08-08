@@ -411,11 +411,13 @@ For each AI there are associated attributes:
     # ---------------
 
     def init_device(self):
+        """Initiate device and sets its state to STANDBY"""
         Device.init_device(self)
         self.set_state(DevState.STANDBY)
         self.set_status("ADAM-6217 enabled")
 
     def delete_device(self):
+        """Delete device"""
         self.connected_ADAM.close()
 
     # ------------------
@@ -600,6 +602,8 @@ For each AI there are associated attributes:
     # --------------------
 
     def encode_value(self, value, channel):
+        """Encode 16-bit value to double depending on Type Code of
+        channel """
         type_code = self.analog_output_types[channel]
         if   type_code == int("0182", 16): tmp = 0.02  * value/65535.0
         elif type_code == int("0180", 16): tmp = (0.016 * value/65535.0) + 0.004
@@ -615,9 +619,11 @@ For each AI there are associated attributes:
         return tmp
 
     def decode_type_code(self, channel):
+        """Decode 16-bit number to Type Code string"""
         return self.code_to_type_dict[self.analog_output_types[channel]]
 
     def encode_type_code(self, value="0-20mA"):
+        """Encodes Type Code string to 16-bit number"""
         return self.type_to_code_dict[value]
 
     # --------
@@ -627,6 +633,10 @@ For each AI there are associated attributes:
     @command
     @DebugIt()
     def ConnectWithDevice(self):
+        """
+         Connect with ADAM Module with IP address the same as DeviceAddress
+         property and sets its state to ON
+        """
         try:
             self.connected_ADAM = ModbusTcpClient(self.DeviceAddress,
                                                   port=int(502))
@@ -647,15 +657,20 @@ For each AI there are associated attributes:
     @command(dtype_in=int, doc_in='Channel number')
     @DebugIt()
     def ResetHistMax(self, value):
+        """Resets Historical Maximum Value"""
         self.connected_ADAM.write_coil(100 + value, int('0xff00', 16))
 
     @command(dtype_in=int, doc_in='Channel number')
     @DebugIt()
     def ResetHistMin(self, value):
+        """Resets Historical Minimum Value"""
         self.connected_ADAM.write_coil(110 + value, int('0xff00', 16))
 
     @command(polling_period=500)
     def read_DataFromDevice(self):
+        """
+          Synchronous reading data from ADAM Module registers
+         """
         if self.get_state() == tango.DevState.ON:
             # read Open-Circuit Flag
             tmp = self.connected_ADAM.read_coils(120, 8)

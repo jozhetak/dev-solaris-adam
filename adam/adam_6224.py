@@ -363,15 +363,19 @@ For each DI there are associated attributes:
     # ---------------
 
     def init_device(self):
-        """Initiate device and sets its state to STANDBY"""
+        """Initialise device and sets its state to STANDBY"""
         Device.init_device(self)
         self.set_state(DevState.STANDBY)
         self.set_status("ADAM-6224 in state STANDBY, ready to connect to "
                         "device")
 
     def delete_device(self):
-        """Delete device"""
+        """Disconnect from device and sets state to STANDBY """
         self.connected_ADAM.close()
+        self.set_state(DevState.STANDBY)
+        self.set_status(
+            "Device disconnected form ADAM-6250, set state to STANDBY, "
+            "ready to connect to device again")
 
     # --------------------
     # AnalogOutput methods

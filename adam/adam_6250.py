@@ -47,9 +47,9 @@ For each DO there are associated attributes:
 
  * DigitalOutput(bool) - contains present output value of the channel is
     adjustable
- * Pulse Output Low(int) - contains present value (in milliseconds) of Pulse
+ * PulseOutputLow(int) - contains present value (in milliseconds) of Pulse
     Output Low Level Width of the channel, is adjustable
- * Pulse Output high(int) - contains present value (in milliseconds) of
+ * PulseOutputHigh(int) - contains present value (in milliseconds) of
     Pulse Output High Level Width of the channel, is adjustable
  * AbsolutePulse(int) - contains value of Absolute Pulse, is adjustable
  * IncrementalPulse(int) - contains value of Absolute Pulse, is adjustable
@@ -92,15 +92,19 @@ For each DO there are associated attributes:
     # --------------------
 
     def encode(self,value):
+        """Prepare list of ints to write to registers responsible for counters'
+                statues"""
         tmp = [0, 0, 0, 0, 0, 0, 0, 0]
-        for i in value:
+        for i in range(0,8):
             if value[i] == True:
                 tmp[i] = int('0xff00', 16)
         return tmp
 
     def encode_values(self,value):
+        """Prepare list of ints to write to registers responsible for Pulses'
+        values"""
         tmp = range(0,14) * 0
-        for i in value:
+        for i in range(0,7):
             tmp[2 * i] = int(value[i] / 65536)
             tmp[2 * i + 1] = int(value[i] % 65536)
         return tmp
@@ -245,7 +249,7 @@ For each DO there are associated attributes:
     # ---------------
 
     def init_device(self):
-        """Initiate device and sets its state to STANDBY"""
+        """Initialise device and sets its state to STANDBY"""
         Device.init_device(self)
         self.set_state(DevState.STANDBY)
         self.set_status(
@@ -253,8 +257,12 @@ For each DO there are associated attributes:
             "device")
 
     def delete_device(self):
-        """Delete device"""
+        """Disconnect from device and sets state to STANDBY """
         self.connected_ADAM.close()
+        self.set_state(DevState.STANDBY)
+        self.set_status(
+            "Device disconnected form ADAM-6250, set state to STANDBY, "
+            "ready to connect to device again")
 
     # --------
     # Commands
@@ -289,7 +297,10 @@ For each DO there are associated attributes:
         """
          Clear counter value of given channel number
         """
-        self.connected_ADAM.write_coil(40 + value, int('0xff00', 16))
+        if 0 <= value < 8:
+            self.connected_ADAM.write_coil(40 + value, int('0xff00', 16))
+        else:
+            raise ValueError
 
     @command(polling_period=500)
     def read_DataFromDevice(self):

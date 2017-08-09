@@ -25,6 +25,7 @@ from functools import partial
 from pymodbus.client.sync import ModbusTcpClient
 from pymodbus.exceptions import ModbusException
 
+
 class ADAM6224(Device):
     """ ADAM6224
 It is a definition of a class used to control ADAM-6224 controller via
@@ -44,7 +45,6 @@ For each AO there are associated attributes:
     AO triggered to Fail Safety Value
  * CodeType(string) - contains present type of output of the channel,
     available:  0-20mA, 4-20mA, 0-10V, 0-5V, +-10V, +-5V
-
 
 For each DI there are associated attributes:
 
@@ -71,7 +71,7 @@ For each DI there are associated attributes:
     event_status_dictionary = {int(1): 'Unreliable DI value (UART Timeout)',
                                int(2): 'Safety Value triggered',
                                int(4): 'Startup Value triggered',
-                               int(0):  ' '}
+                               int(0): ' '}
 
     status_dict_1 = {int(1): 'Fail to provide AO Value',
                      int(8): 'No Output Current',
@@ -96,11 +96,11 @@ For each DI there are associated attributes:
         default_value="192.168.120.55",
         doc="An IP address of device"
     )
-    
+
     # ------------------
     # Attributes methods
     # ------------------
-    
+
     # --------------------
     # DigitalInput method
     # --------------------
@@ -134,7 +134,9 @@ For each DI there are associated attributes:
 
     def write_AnalogOutput(self, channel, value):
         self.connected_ADAM.write_register(channel, self.decode_value(value,
-                                                                  channel, 0))
+                                                                      channel,
+                                                                      0))
+
     # --------------------
     # SafetyValue method
     # --------------------
@@ -147,6 +149,7 @@ For each DI there are associated attributes:
         reg = 410 + channel
         self.connected_ADAM.write_register(reg, self.decode_value(value,
                                                                   channel, 1))
+
     # --------------------
     # StartupValue method
     # --------------------
@@ -159,6 +162,7 @@ For each DI there are associated attributes:
         reg = 400 + channel
         self.connected_ADAM.write_register(reg, self.decode_value(value,
                                                                   channel, 2))
+
     # --------------------
     # TypeCode method
     # --------------------
@@ -169,7 +173,7 @@ For each DI there are associated attributes:
     def write_TypeCode(self, value, channel):
         reg = 200 + channel
         self.connected_ADAM.write_register(reg, self.encode_type_code(value))
-        
+
     # ----------
     # Attributes
     # ----------
@@ -359,13 +363,26 @@ For each DI there are associated attributes:
     # ---------------
 
     def init_device(self):
+        """Initialise device and sets its state to STANDBY"""
         Device.init_device(self)
         self.set_state(DevState.STANDBY)
         self.set_status("ADAM-6224 in state STANDBY, ready to connect to "
                         "device")
 
     def delete_device(self):
+        """Disconnect from physical device before deleting instance"""
         self.connected_ADAM.close()
+
+
+    @command
+    @DebugIt()
+    def disconnect(self):
+        """Disconnect from device and sets state to STANDBY """
+        self.connected_ADAM.close()
+        self.set_state(DevState.STANDBY)
+        self.set_status(
+            "Device disconnected form ADAM-6224, set state to STANDBY, "
+            "ready to connect to device again")
 
     # --------------------
     # AnalogOutput methods
@@ -470,11 +487,11 @@ For each DI there are associated attributes:
 
     def write_SafetyValue_7(self, value):
         self.write_SafetyValue(7, value)
-    
+
     # --------------------
     # StartupValue methods
     # --------------------
-    
+
     def read_StartupValue_0(self):
         return self.read_StartupValue(0)
 
@@ -574,7 +591,7 @@ For each DI there are associated attributes:
 
     def write_TypeCode_7(self, value):
         self.write_TypeCode(7, value)
-        
+
     # --------------------
     # DigitalInput methods
     # --------------------
@@ -628,13 +645,15 @@ For each DI there are associated attributes:
     # --------------------
 
     def decode_value(self, value, channel, type):
+        """Decode double to 16-bit value depending on Type Code of
+        channel """
         type_code = self.analog_output_types[channel]
-        if  ((type_code == int("0182", 16) and not
-                (value >= 0 and value <= 0.02)) or
+        if ((type_code == int("0182", 16) and not
+        (value >= 0 and value <= 0.02)) or
                 (type_code == int("0180", 16) and not
                 (value >= 0.004 and value <= 0.02)) or
                 (type_code == int("0148", 16) and not
-                (value >= 0 and value <= 10))   or
+                (value >= 0 and value <= 10)) or
                 (type_code == int("0147", 16) and not
                 (value >= 0 and value <= 5)) or
                 (type_code == int("0143", 16) and not
@@ -650,46 +669,53 @@ For each DI there are associated attributes:
             self.error_stream('Illegal value')
             raise ValueError
         else:
-            if   type_code == int("0182", 16):
+            if type_code == int("0182", 16):
                 tmp = int(4095 * value / 0.02)
             elif type_code == int("0180", 16):
                 tmp = int(4095 * (value - 0.004) / 0.016)
             elif type_code == int("0148", 16):
                 tmp = int(4095 * value / 10)
             elif type_code == int("0147", 16):
-                tmp = int(4095 * value/ 5 )
+                tmp = int(4095 * value / 5)
             elif type_code == int("0143", 16):
                 tmp = int(4095 * (value + 10) / 20)
             elif type_code == int("0142", 16):
                 tmp = int(4095 * (value + 5) / 10)
             else:
-                if type == 0:      tmp = self.analog_output_values[channel]
-                elif type == 1:    tmp = self.analog_output_safety_values[channel]
-                else:               tmp = self.analog_output_statup_values[channel]
+                if type == 0:
+                    tmp = self.analog_output_values[channel]
+                elif type == 1:
+                    tmp = self.analog_output_safety_values[channel]
+                else:
+                    tmp = self.analog_output_statup_values[channel]
         return tmp
 
     def encode_value(self, value, channel):
+        """Encode 16-bit value to double depending on Type Code of
+        channel """
         type_code = self.analog_output_types[channel]
-        if   type_code == int("0182", 16):
-            tmp = 0.02  * value/4095.0
+        if type_code == int("0182", 16):
+            tmp = 0.02 * value / 4095.0
         elif type_code == int("0180", 16):
-            tmp = (0.016 * value/4095.0) + 0.004
+            tmp = (0.016 * value / 4095.0) + 0.004
         elif type_code == int("0148", 16):
-            tmp = 10    * value/4095.0
+            tmp = 10 * value / 4095.0
         elif type_code == int("0147", 16):
-            tmp = 5     * value/4095.0
+            tmp = 5 * value / 4095.0
         elif type_code == int("0143", 16):
-            tmp = (20   * value/4095.0) - 10
+            tmp = (20 * value / 4095.0) - 10
         elif type_code == int("0142", 16):
-            tmp = (10   * value/4095.0) - 5
+            tmp = (10 * value / 4095.0) - 5
         else:
             tmp = self.analog_output_values[channel]
         return tmp
 
     def decode_type_code(self, channel):
+        """Decode 16-bit number to Type Code string"""
         return self.code_to_type_dict[self.analog_output_types[channel]]
 
     def encode_type_code(self, value="0-20mA"):
+        """Encodes Type Code string to 16-bit number"""
         return self.type_to_code_dict[value]
 
     # --------
@@ -699,6 +725,10 @@ For each DI there are associated attributes:
     @command
     @DebugIt()
     def ConnectWithDevice(self):
+        """
+         Connect with ADAM Module with IP address the same as DeviceAddress
+         property and sets its state to ON
+        """
         try:
             self.connected_ADAM = ModbusTcpClient(self.DeviceAddress,
                                                   port=int(502))
@@ -711,11 +741,14 @@ For each DI there are associated attributes:
             self.set_status("Exception caught while connecting to device:"
                             + "\n%s" % e)
         self.set_state(DevState.ON)
-        self.set_status("Connected do device with IP: "
+        self.set_status("Connected to device with IP: "
                         + str(self.DeviceAddress))
 
     @command(polling_period=500)
     def read_DataFromDevice(self):
+        """
+          Synchronous reading data from ADAM Module registers
+         """
         if self.get_state() == tango.DevState.ON:
             # read Digital Inputs
             tmp = self.connected_ADAM.read_coils(0, 4)
@@ -738,6 +771,7 @@ For each DI there are associated attributes:
             # read Safety Values
             tmp = self.connected_ADAM.read_holding_registers(410, 4)
             self.analog_output_safety_values = tmp.registers
+
 
 # ----------
 # Run server

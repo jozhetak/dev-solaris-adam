@@ -42,8 +42,8 @@ For each AI there are associated attributes:
  * StartupValue(double)  - contains present startup value of the channel (V
     or mA), it is adjustable
  * Status(string)  - contains present status of the channel, available:
-    Failed to provide AI value (UART timeout), Over Range, Under Range, Open Circuit(Burnout),
-    AD Converter failed, Zero / Span Calibration Error,
+    Failed to provide AI value (UART timeout), Over Range, Under Range,
+    Open Circuit(Burnout), AD Converter failed, Zero / Span Calibration Error,
  * HistMin(double) - historical minimum value, can be reset to actual
     AnalogInput value using command ResetHistMin (channel number)
  * HistMax(double) - historical minimum value, can be reset to actual
@@ -79,7 +79,7 @@ For each AI there are associated attributes:
 
     status_dict_1 = {int(1): 'Failed to provide AI value (UART timeout)',
                      int(2): 'Over Range',
-                     int(4):'Under Range',
+                     int(4): 'Under Range',
                      int(8): 'Open Circuit(Burnout)',
                      int(128): 'AD Converter failed',
                      int(512): 'Zero / Span Calibration Error',
@@ -93,7 +93,6 @@ For each AI there are associated attributes:
     # -----------------
     # Device Properties
     # -----------------
-
 
     DeviceAddress = device_property(
         dtype='str',
@@ -669,13 +668,19 @@ For each AI there are associated attributes:
     @DebugIt()
     def ResetHistMax(self, value):
         """Resets Historical Maximum Value"""
-        self.connected_ADAM.write_coil(100 + value, int('0xff00', 16))
+        if 0 <= value < 8:
+            self.connected_ADAM.write_coil(100 + value, int('0xff00', 16))
+        else:
+            raise ValueError
 
     @command(dtype_in=int, doc_in='Channel number')
     @DebugIt()
     def ResetHistMin(self, value):
         """Resets Historical Minimum Value"""
-        self.connected_ADAM.write_coil(110 + value, int('0xff00', 16))
+        if 0 <= value < 8:
+            self.connected_ADAM.write_coil(110 + value, int('0xff00', 16))
+        else:
+            raise ValueError
 
     @command(polling_period=500)
     def read_DataFromDevice(self):
@@ -684,23 +689,19 @@ For each AI there are associated attributes:
          """
         if self.get_state() == tango.DevState.ON:
             # read Open-Circuit Flag
-            tmp = self.connected_ADAM.read_coils(120, 8)
-            self.open_circuit_flags = tmp.bits
+            tmp = self.connected_ADAM.read_coils(120, 32)
+            self.open_circuit_flags = tmp.bits[0:8]
             # read LowAlarmFlags
-            tmp = self.connected_ADAM.read_coils(130, 8)
-            self.low_alarm_flag = tmp.bits
+            self.low_alarm_flag = tmp.bits[10:18]
             # read High Alarm Flags
-            tmp = self.connected_ADAM.read_coils(140, 8)
-            self.high_alarm_flag = tmp.bits
+            self.high_alarm_flag = tmp.bits[20:28]
             # read Analog Inputs
-            tmp = self.connected_ADAM.read_holding_registers(0, 8)
-            self.analog_input_values = tmp.registers
+            tmp = self.connected_ADAM.read_holding_registers(0, 32)
+            self.analog_input_values = tmp.registers[0:8]
             # read Historical Max Values
-            tmp = self.connected_ADAM.read_holding_registers(10, 8)
-            self.hist_max = tmp.registers
+            self.hist_max = tmp.registers[10:18]
             # read Historical Min Value
-            tmp = self.connected_ADAM.read_holding_registers(20, 8)
-            self.hist_min = tmp.registers
+            self.hist_min = tmp.registers[20:28]
             # read Statuses
             tmp = self.connected_ADAM.read_holding_registers(100, 16)
             self.analog_input_statuses = tmp.registers

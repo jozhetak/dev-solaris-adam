@@ -373,7 +373,6 @@ For each DI there are associated attributes:
         """Disconnect from physical device before deleting instance"""
         self.connected_ADAM.close()
 
-
     @command
     @DebugIt()
     def disconnect(self):
@@ -648,18 +647,12 @@ For each DI there are associated attributes:
         """Decode double to 16-bit value depending on Type Code of
         channel """
         type_code = self.analog_output_types[channel]
-        if ((type_code == int("0182", 16) and not
-        (value >= 0 and value <= 0.02)) or
-                (type_code == int("0180", 16) and not
-                (value >= 0.004 and value <= 0.02)) or
-                (type_code == int("0148", 16) and not
-                (value >= 0 and value <= 10)) or
-                (type_code == int("0147", 16) and not
-                (value >= 0 and value <= 5)) or
-                (type_code == int("0143", 16) and not
-                (value >= -10 and value <= 10)) or
-                (type_code == int("0142", 16) and not
-                (value >= -5 and value <= 5))):
+        if ((type_code == int("0182", 16) and not (0 <= value <= 0.02))
+            or (type_code == int("0180", 16) and not (0.004 <= value <= 0.02))
+            or (type_code == int("0148", 16) and not (0 <= value <= 10))
+            or (type_code == int("0147", 16) and not (0 <= value <= 5))
+            or (type_code == int("0143", 16) and not (-10 <= value <= 10))
+            or (type_code == int("0142", 16) and not (-5 <= value <= 5))):
             if type == 0:
                 tmp = self.analog_output_values[channel]
             elif type == 1:
@@ -757,20 +750,18 @@ For each DI there are associated attributes:
             tmp = self.connected_ADAM.read_holding_registers(0, 4)
             self.analog_output_values = tmp.registers
             # read Analog Outputs Status
-            tmp = self.connected_ADAM.read_holding_registers(100, 8)
-            self.analog_output_statuses = tmp.registers
+            tmp = self.connected_ADAM.read_holding_registers(100, 16)
+            self.analog_output_statuses = tmp.registers[0:8]
             # read Digital Inputs Status
-            tmp = self.connected_ADAM.read_holding_registers(110, 4)
-            self.digital_input_events = tmp.registers
+            self.digital_input_events = tmp.registers[10:14]
             # read Type Codes
             tmp = self.connected_ADAM.read_holding_registers(200, 4)
             self.analog_output_types = tmp.registers
             # read Startup Values
-            tmp = self.connected_ADAM.read_holding_registers(400, 4)
-            self.analog_output_startup_values = tmp.registers
+            tmp = self.connected_ADAM.read_holding_registers(400, 16)
+            self.analog_output_startup_values = tmp.registers[0:4]
             # read Safety Values
-            tmp = self.connected_ADAM.read_holding_registers(410, 4)
-            self.analog_output_safety_values = tmp.registers
+            self.analog_output_safety_values = tmp.registers[10:14]
 
 
 # ----------

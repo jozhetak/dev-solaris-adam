@@ -28,6 +28,22 @@ adam\.adam\_6250 module
     :undoc-members:
     :show-inheritance:
 
+adam\.adam\_6251 module
+-----------------------
+
+.. automodule:: adam.adam_6251
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+adam\.adam\_6256 module
+-----------------------
+
+.. automodule:: adam.adam_6256
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 adam\.run\_server module
 ------------------------
 
